@@ -26,6 +26,9 @@ const Navbar = () => {
             <Link href="/about" className="font-semibold">
               About
             </Link>
+            <Link href="/add-rooms" className="font-semibold">
+              Add Rooms
+            </Link>
           </div>
           <div className="items-center space-x-4">
             <Link
