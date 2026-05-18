@@ -29,6 +29,7 @@ const AllRoomsPage = async () => {
                     src={room.imageUrl}
                     alt={room.roomName}
                     fill
+                    sizes="(max-w-7xl) 100vw, (max-w-1200px) 50vw, 33vw"
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
 
