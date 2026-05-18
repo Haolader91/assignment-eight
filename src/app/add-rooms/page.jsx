@@ -11,11 +11,20 @@ import {
 import React from "react";
 
 const AddRoomsPage = () => {
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const rooms = Object.fromEntries(formData.entries());
-    console.log(rooms);
+
+    const res = await fetch("http://localhost:5000/rooms", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(rooms),
+    });
+    const data = await res.json();
+    console.log(data);
   };
   return (
     <div className="min-h-screen bg-[#fcfbfe] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
