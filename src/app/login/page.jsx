@@ -14,6 +14,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,6 +39,12 @@ const LoginPage = () => {
       e.currentTarget;
       router.push("/");
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+    });
   };
 
   return (
@@ -114,14 +121,11 @@ const LoginPage = () => {
             or continue with
           </div>
 
-          <button className="w-full flex items-center justify-center gap-3 border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition active:scale-98 transform duration-150">
-            <Image
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="Google Logo"
-              width={16}
-              height={16}
-              className="object-contain"
-            />
+          <button
+            onClick={handleGoogleLogin}
+            className="w-full flex items-center justify-center gap-3 border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition active:scale-98 transform duration-150"
+          >
+            <FcGoogle />
             Continue with Google
           </button>
         </div>
