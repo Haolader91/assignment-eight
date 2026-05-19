@@ -4,12 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 
-const User = ({ user }) => {
+const User = ({ user, handleLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const handleLogout = async () => {
-    await authClient.signOut();
-  };
   return (
     <div className="relative">
       <button
@@ -48,7 +45,7 @@ const User = ({ user }) => {
               {user.email}
             </p>
           </div>
-          <div className="flex flex-col px-5 pt-2 text-black">
+          <div className="flex flex-col px-5 py-2">
             <Link
               href="/my-listings"
               className="text-gray-600 hover:text-[#6366F1]"
@@ -65,7 +62,7 @@ const User = ({ user }) => {
 
           <button
             onClick={handleLogout}
-            className="w-full text-left px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50/50 flex items-center gap-2 transition"
+            className="w-full text-left px-4 py-2.5 border-t border-gray-50 text-sm font-semibold text-red-600 hover:bg-red-50/50 flex items-center gap-2 transition"
           >
             <LogOut className="w-4 h-4" />
             Logout
