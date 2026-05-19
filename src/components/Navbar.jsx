@@ -4,13 +4,12 @@ import { Avatar } from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
+import User from "./User";
 
 const Navbar = () => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
   console.log(user);
-
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const pathname = usePathname();
   const isActive = (path) => pathname === path;
@@ -84,13 +83,7 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <Avatar>
-                <Avatar.Image
-                  alt="John Doe"
-                  src="https://img.heroui.chat/image/avatar?w=400&h=400&u=3"
-                />
-                <Avatar.Fallback>JD</Avatar.Fallback>
-              </Avatar>
+              <User user={user} />
             )}
           </div>
         </div>
