@@ -1,7 +1,22 @@
+"use client";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 const Navbar = () => {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  console.log(user);
+
+  const pathname = usePathname();
+  const isActive = (path) => pathname === path;
+
+  const activeLinkStyles = (path) =>
+    `text-sm font-semibold transition duration-150 ${
+      isActive(path) ? "text-[#6366F1]" : "text-gray-600 hover:text-[#6366F1]"
+    }`;
+
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
@@ -17,16 +32,16 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-8 text-black">
-            <Link href="/" className="font-semibold">
+            <Link href="/" className={activeLinkStyles("/")}>
               Home
             </Link>
-            <Link href="/rooms" className="font-semibold">
+            <Link href="/rooms" className={activeLinkStyles("/rooms")}>
               Rooms
             </Link>
-            <Link href="/about" className="font-semibold">
+            <Link href="/about" className={activeLinkStyles("/about")}>
               About
             </Link>
-            <Link href="/add-rooms" className="font-semibold">
+            <Link href="/add-room" className={activeLinkStyles("/add-room")}>
               Add Rooms
             </Link>
           </div>
