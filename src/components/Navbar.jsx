@@ -1,13 +1,16 @@
 "use client";
 import { authClient } from "@/lib/auth-client";
+import { Avatar } from "@heroui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const Navbar = () => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
   console.log(user);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const pathname = usePathname();
   const isActive = (path) => pathname === path;
@@ -41,23 +44,54 @@ const Navbar = () => {
             <Link href="/about" className={activeLinkStyles("/about")}>
               About
             </Link>
-            <Link href="/add-room" className={activeLinkStyles("/add-room")}>
-              Add Rooms
-            </Link>
+            {user && (
+              <>
+                <Link
+                  href="/add-room"
+                  className={activeLinkStyles("/add-room")}
+                >
+                  Add Rooms
+                </Link>
+                <Link
+                  href="/my-listings"
+                  className={activeLinkStyles("/my-listings")}
+                >
+                  My Listings
+                </Link>
+                <Link
+                  href="/my-bookings"
+                  className={activeLinkStyles("/my-bookings")}
+                >
+                  My Bookings
+                </Link>
+              </>
+            )}
           </div>
           <div className="items-center space-x-4">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 border border-gray-300 rounded-lg hover:border-indigo-600 transition"
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm transition"
-            >
-              Register
-            </Link>
+            {!user ? (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 border border-gray-300 rounded-lg hover:border-indigo-600 transition"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm transition"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <Avatar>
+                <Avatar.Image
+                  alt="John Doe"
+                  src="https://img.heroui.chat/image/avatar?w=400&h=400&u=3"
+                />
+                <Avatar.Fallback>JD</Avatar.Fallback>
+              </Avatar>
+            )}
           </div>
         </div>
       </div>
