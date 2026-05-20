@@ -1,5 +1,6 @@
 import BookingButton from "@/components/BookingButton";
 import UserCard from "@/components/UserCard";
+import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import {
   CalendarCheck,
@@ -12,13 +13,26 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
+import { headers } from "next/headers";
 import Image from "next/image";
 import React from "react";
 
 const RoomsDetailsPage = async ({ params }) => {
+  const token = await auth.api.getToken({
+    query: {
+      disableCookieCache: true,
+    },
+    headers: await headers(),
+  });
+  const mainToken = token?.token;
+  console.log(mainToken);
+
   const { id } = await params;
   const res = await fetch(`http://localhost:5000/rooms/${id}`, {
     cache: "no-store",
+    headers: {
+      Authorization: mainToken ? `Bearer ${mainToken}` : "",
+    },
   });
   const room = await res.json();
   // console.log(room);

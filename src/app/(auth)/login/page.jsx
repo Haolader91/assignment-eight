@@ -29,7 +29,7 @@ const LoginPage = () => {
       email: user.email,
       password: user.password,
     });
-    console.log(data);
+    // console.log(data);
     if (error) {
       alert(error.message || "Signup failed");
       return;
@@ -39,6 +39,9 @@ const LoginPage = () => {
       e.currentTarget;
       router.push("/");
     }
+
+    const { data: tokenData } = await authClient.token();
+    console.log(tokenData);
   };
 
   const handleGoogleLogin = async () => {
