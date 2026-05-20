@@ -18,6 +18,7 @@ const BookingButton = ({ room }) => {
       price: room.price,
       floor: room.floor,
       updatedAt: room.updatedAt || new Date(),
+      status: "Confirmed",
     };
     // console.log(bookingData);
     const res = await fetch("http://localhost:5000/booking", {
