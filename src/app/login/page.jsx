@@ -125,7 +125,7 @@ const LoginPage = () => {
             onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-3 border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition active:scale-98 transform duration-150"
           >
-            <FcGoogle />
+            <FcGoogle size={20} />
             Continue with Google
           </button>
         </div>

@@ -3,13 +3,14 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import User from "./User";
+// import User from "./User";
 import { LogOut, Menu, X } from "lucide-react";
+import UserComponent from "./UserComponent";
 
 const Navbar = () => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
-  console.log(user);
+  // console.log(user);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -87,7 +88,7 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <User user={user} handleLogout={handleLogout} />
+              <UserComponent user={user} handleLogout={handleLogout} />
             )}
           </div>
 

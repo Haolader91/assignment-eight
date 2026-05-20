@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 
-const User = ({ user, handleLogout }) => {
+const UserComponent = ({ user, handleLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
@@ -73,4 +73,4 @@ const User = ({ user, handleLogout }) => {
   );
 };
 
-export default User;
+export default UserComponent;

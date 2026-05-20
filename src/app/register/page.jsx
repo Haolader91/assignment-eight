@@ -14,6 +14,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +40,12 @@ const RegisterPage = () => {
       e.currentTarget;
       router.push("/");
     }
+  };
+
+  const handleGoogleRegister = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+    });
   };
 
   return (
@@ -150,14 +157,11 @@ const RegisterPage = () => {
             or continue with
           </div>
 
-          <button className="w-full flex items-center justify-center gap-3 border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition active:scale-98 transform duration-150">
-            <Image
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="Google Logo"
-              width={16}
-              height={16}
-              className="object-contain"
-            />
+          <button
+            onClick={handleGoogleRegister}
+            className="w-full flex items-center justify-center gap-3 border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition active:scale-98 transform duration-150"
+          >
+            <FcGoogle size={20} />
             Sign up with Google
           </button>
         </div>
@@ -168,7 +172,7 @@ const RegisterPage = () => {
             href="/login"
             className="font-bold text-[#6366F1] hover:underline"
           >
-            Sign in
+            Register
           </Link>
         </p>
       </div>

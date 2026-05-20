@@ -1,3 +1,6 @@
+import BookingButton from "@/components/BookingButton";
+import UserCard from "@/components/UserCard";
+import { authClient } from "@/lib/auth-client";
 import {
   CalendarCheck,
   ChevronLeft,
@@ -18,7 +21,7 @@ const RoomsDetailsPage = async ({ params }) => {
     cache: "no-store",
   });
   const room = await res.json();
-  console.log(room);
+  // console.log(room);
 
   if (!room) {
     return <div className="p-10">Room not found</div>;
@@ -150,51 +153,10 @@ const RoomsDetailsPage = async ({ params }) => {
           </div>
 
           {/* Owned*/}
-          <div className="space-y-4 text-left">
-            <div className="p-5 bg-white border border-gray-50 rounded-2xl shadow-sm shadow-indigo-950/5 space-y-4">
-              <p className="text-xs font-bold text-gray-400 tracking-wide uppercase">
-                Owned by
-              </p>
-              <div className="flex items-center gap-3">
-                <Image
-                  src={room.owner.avatarUrl}
-                  alt={room.owner.name}
-                  width={40}
-                  height={40}
-                  className="w-11 h-11 rounded-full object-cover border border-gray-100"
-                />
-                <div>
-                  <h4 className="text-sm font-bold text-[#0b132a]">
-                    {room.owner.name}
-                  </h4>
-                  <p className="text-xs text-gray-400">
-                    Member since {room.owner.joinDate}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 bg-white border border-gray-50 rounded-2xl shadow-sm shadow-indigo-950/5 flex flex-col gap-3">
-              <button className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition active:scale-98 transform duration-150">
-                <Edit3 className="w-4 h-4 text-indigo-500" />
-                Edit Room
-              </button>
-              <button className="w-full flex items-center justify-center gap-2 border border-red-100 bg-red-50/30 text-red-600 font-semibold text-sm py-3 rounded-xl hover:bg-red-50 transition active:scale-98 transform duration-150">
-                <Trash2 className="w-4 h-4" />
-                Delete Room
-              </button>
-            </div>
-          </div>
+          <UserCard />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-gray-100">
-          <button className="w-full bg-[#6366F1] hover:bg-[#5356e2] text-white font-bold text-sm py-4 rounded-xl shadow-lg shadow-indigo-600/10 active:scale-98 transition transform duration-150 text-center">
-            Book Now
-          </button>
-          <button className="w-full bg-white hover:bg-gray-50 text-[#6366F1] border-2 border-indigo-100 font-bold text-sm py-4 rounded-xl active:scale-98 transition transform duration-150 text-center">
-            Login to Book
-          </button>
-        </div>
+        <BookingButton room={room} />
       </div>
     </div>
   );
