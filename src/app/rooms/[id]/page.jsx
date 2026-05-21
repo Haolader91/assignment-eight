@@ -1,4 +1,6 @@
 import BookingButton from "@/components/BookingButton";
+import DeleteRoomButton from "@/components/DeleteRoomButton";
+import EditRoomPage from "@/components/EditRoomForm";
 import UserCard from "@/components/UserCard";
 import { auth } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
@@ -15,9 +17,15 @@ import {
 } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const RoomsDetailsPage = async ({ params }) => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const currentUserEmail = session?.user?.email;
+
   const token = await auth.api.getToken({
     query: {
       disableCookieCache: true,
@@ -25,9 +33,10 @@ const RoomsDetailsPage = async ({ params }) => {
     headers: await headers(),
   });
   const mainToken = token?.token;
-  console.log(mainToken);
+  // console.log(mainToken);
 
   const { id } = await params;
+
   const res = await fetch(`http://localhost:5000/rooms/${id}`, {
     cache: "no-store",
     headers: {
@@ -40,6 +49,7 @@ const RoomsDetailsPage = async ({ params }) => {
   if (!room) {
     return <div className="p-10">Room not found</div>;
   }
+  const isOwner = currentUserEmail === room?.ownerEmail;
 
   return (
     <div className="min-h-screen bg-[#fcfbfe] py-6 px-4 sm:px-6 lg:px-8">
@@ -69,6 +79,19 @@ const RoomsDetailsPage = async ({ params }) => {
             priority
           />
         </div>
+
+        {isOwner && (
+          <div className="flex gap-4 p-4 bg-amber-50/50 border border-amber-100 rounded-2xl justify-end">
+            <Link
+              href={`/rooms/edit/${room._id}`}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-50 transition shadow-sm"
+            >
+              <Edit3 className="w-4 h-4 text-indigo-500" />
+              Edit Room
+            </Link>
+            <DeleteRoomButton roomId={room._id} token={mainToken} />
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-2">
           <div className="md:col-span-2 space-y-6 text-left">
@@ -102,7 +125,7 @@ const RoomsDetailsPage = async ({ params }) => {
                 <div>
                   <p className="text-xs text-gray-400 font-medium">Capacity</p>
                   <p className="text-xs sm:text-sm font-bold text-gray-800">
-                    {room.capacity}
+                    {room.capacity} pax
                   </p>
                 </div>
               </div>
@@ -139,20 +162,20 @@ const RoomsDetailsPage = async ({ params }) => {
             <div className="space-y-3">
               <h3 className="text-base font-bold text-[#0b132a]">Amenities</h3>
               <div className="flex flex-wrap gap-2">
-                {room?.amenities &&
-                  Object.entries(room.amenities).map(([key, value]) =>
-                    value ? (
-                      <span
-                        key={key}
-                        className="px-3 py-1 bg-gray-100 rounded-xl text-xs text-black"
-                      >
-                        {key.replace(/([A-Z])/g, " $1")}
-                      </span>
-                    ) : null,
-                  )}
-                <span className="px-3 py-2 text-xs font-bold text-indigo-500 bg-indigo-50/50 rounded-xl cursor-pointer">
-                  +1 more
-                </span>
+                {room?.amenities && Array.isArray(room.amenities) ? (
+                  room.amenities.map((amenity, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-gray-100 rounded-xl text-xs text-black font-medium"
+                    >
+                      {amenity}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs text-gray-400">
+                    No amenities available
+                  </span>
+                )}
               </div>
             </div>
 
@@ -167,10 +190,11 @@ const RoomsDetailsPage = async ({ params }) => {
           </div>
 
           {/* Owned*/}
-          <UserCard />
+          <div className="space-y-6">
+            <UserCard />
+            <BookingButton room={room} />
+          </div>
         </div>
-
-        <BookingButton room={room} />
       </div>
     </div>
   );

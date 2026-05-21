@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import {
   Button,
   FieldError,
@@ -8,23 +9,73 @@ import {
   TextArea,
   TextField,
 } from "@heroui/react";
+import { useRouter } from "next/navigation";
+// import { useRouter } from "next/router";
 import React from "react";
+import { toast } from "react-hot-toast";
 
 const AddRoomsPage = () => {
+  const router = useRouter();
+
+  const { data: session } = authClient.useSession();
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const rooms = Object.fromEntries(formData.entries());
 
-    const res = await fetch("http://localhost:5000/rooms", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(rooms),
-    });
-    const data = await res.json();
-    console.log(data);
+    const roomName = formData.get("roomName");
+    const description = formData.get("description");
+    const imageUrl = formData.get("imageUrl");
+    const floor = formData.get("floor");
+    const capacity = Number(formData.get("capacity"));
+    const price = Number(formData.get("price"));
+
+    const amenities = formData.getAll("amenities");
+
+    const ownerEmail = session?.user?.email;
+
+    if (!ownerEmail) {
+      toast.error("Please login first to add a room!");
+      return;
+    }
+
+    const roomData = {
+      roomName,
+      description,
+      imageUrl,
+      floor,
+      capacity,
+      price,
+      amenities,
+      ownerEmail,
+      bookingCount: 0,
+    };
+    const loadingToast = toast.loading("Adding your premium room...");
+
+    try {
+      const res = await fetch("http://localhost:5000/rooms", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(roomData),
+      });
+
+      const data = await res.json();
+      toast.dismiss(loadingToast);
+      if (res.ok) {
+        toast.success("Room added successfully");
+        router.push("/rooms");
+      } else {
+        toast.error(data.message || "Failed to add room");
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error("Something went wrong with the server connection!");
+      console.error(error);
+    }
   };
   return (
     <div className="min-h-screen bg-[#fcfbfe] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -155,7 +206,8 @@ const AddRoomsPage = () => {
                 <label className="flex items-center gap-3 cursor-pointer text-gray-600 text-sm font-medium select-none">
                   <input
                     type="checkbox"
-                    name="whiteboard"
+                    name="amenities"
+                    value="Whiteboard"
                     className="w-4 h-4 rounded-md border-gray-300 accent-indigo-600"
                   />
                   <span>Whiteboard</span>
@@ -164,7 +216,8 @@ const AddRoomsPage = () => {
                 <label className="flex items-center gap-3 cursor-pointer text-gray-600 text-sm font-medium select-none">
                   <input
                     type="checkbox"
-                    name="projector"
+                    name="amenities"
+                    value="Projector"
                     className="w-4 h-4 rounded-md border-gray-300 accent-indigo-600"
                   />
                   <span>Projector</span>
@@ -173,7 +226,8 @@ const AddRoomsPage = () => {
                 <label className="flex items-center gap-3 cursor-pointer text-gray-600 text-sm font-medium select-none">
                   <input
                     type="checkbox"
-                    name="wifi"
+                    name="amenities"
+                    value="Wi‑Fi"
                     className="w-4 h-4 rounded-md border-gray-300 accent-indigo-600"
                   />
                   <span>Wi-Fi</span>
@@ -182,7 +236,8 @@ const AddRoomsPage = () => {
                 <label className="flex items-center gap-3 cursor-pointer text-gray-600 text-sm font-medium select-none">
                   <input
                     type="checkbox"
-                    name="powerOutlets"
+                    name="amenities"
+                    value="Power Outlets"
                     className="w-4 h-4 rounded-md border-gray-300 accent-indigo-600"
                   />
                   <span>Power Outlets</span>
@@ -191,7 +246,8 @@ const AddRoomsPage = () => {
                 <label className="flex items-center gap-3 cursor-pointer text-gray-600 text-sm font-medium select-none">
                   <input
                     type="checkbox"
-                    name="quietZone"
+                    name="amenities"
+                    value="Quiet Zone"
                     className="w-4 h-4 rounded-md border-gray-300 accent-indigo-600"
                   />
                   <span>Quiet Zone</span>
@@ -200,7 +256,8 @@ const AddRoomsPage = () => {
                 <label className="flex items-center gap-3 cursor-pointer text-gray-600 text-sm font-medium select-none">
                   <input
                     type="checkbox"
-                    name="airConditioning"
+                    name="amenities"
+                    value="Air Conditioning"
                     className="w-4 h-4 rounded-md border-gray-300 accent-indigo-600"
                   />
                   <span>Air Conditioning</span>
