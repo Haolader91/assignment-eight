@@ -22,9 +22,9 @@ const Banner = () => {
                 <br />
                 List your own room and earn.
               </p>
-              <Link href="/">
+              <Link href="/rooms">
                 <button className="btn btn-primary bg-indigo-600 border-none hover:bg-indigo-700 text-white rounded-xl px-8 py-3">
-                  Explore Courses
+                  Explore Rooms
                 </button>
               </Link>
             </div>

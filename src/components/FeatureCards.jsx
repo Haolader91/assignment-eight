@@ -41,7 +41,7 @@ const FeatureCards = () => {
           </div>
 
           {/* Card 2:*/}
-          <div className="bg-[#f7f6fe] rounded-3xl p-6 sm:p-8 border border-gray-200 shadow-sm hover:shadow-md transition duration-200 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="bg-[#f7f6fe] rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition duration-200 flex flex-col sm:flex-row items-center justify-between gap-6">
             {/* Left */}
             <div className="flex-1 space-y-4 text-left order-2 sm:order-1">
               <h2 className="text-xl sm:text-2xl font-bold text-[#0b132a]">

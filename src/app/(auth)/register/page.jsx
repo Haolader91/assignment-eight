@@ -15,30 +15,56 @@ import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-hot-toast";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [validationError, setValidationError] = useState("");
   const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setValidationError("");
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
     // console.log(user);
+    const password = user.password;
+    if (password.length < 6) {
+      setValidationError("Password must be at least 6 characters long.");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setValidationError(
+        "Password must contain at least one uppercase letter.",
+      );
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      setValidationError(
+        "Password must contain at least one lowercase letter.",
+      );
+      return;
+    }
+
+    const loadingToast = toast.loading("Creating your account...");
+
     const { data, error } = await authClient.signUp.email({
       name: user.name,
       email: user.email,
       password: user.password,
       image: user.image || "",
     });
-    console.log(data);
+    // console.log(data);
+    toast.dismiss(loadingToast);
     if (error) {
-      alert(error.message || "Signup failed");
+      toast.error(error.message || "Signup failed");
       return;
     }
 
     if (data) {
-      e.currentTarget;
-      router.push("/");
+      await authClient.signOut();
+      toast.success("Registration successful! Please login.");
+      router.push("/login");
     }
   };
 
@@ -61,6 +87,12 @@ const RegisterPage = () => {
         </div>
 
         <div className="bg-white p-8 border border-gray-100 rounded-3xl shadow-xl shadow-indigo-950/5 space-y-6">
+          {validationError && (
+            <div className="p-3.5 bg-red-50 border border-red-100 text-red-600 text-sm font-semibold rounded-xl text-center">
+              {validationError}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5 text-left">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-500 tracking-wide uppercase">
@@ -100,7 +132,7 @@ const RegisterPage = () => {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-500 tracking-wide uppercase">
-                Profile Image URL (Optional)
+                Profile Image URL
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
@@ -109,6 +141,7 @@ const RegisterPage = () => {
                 <input
                   type="url"
                   name="image"
+                  required
                   placeholder="https://example.com/avatar.jpg"
                   className="w-full pl-10 pr-4 py-3 text-black bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6366F1] focus:bg-white transition"
                 />

@@ -5,12 +5,13 @@ import { LiaLinkedin } from "react-icons/lia";
 import { BsInstagram } from "react-icons/bs";
 import { BiPhone } from "react-icons/bi";
 import { IoMail } from "react-icons/io5";
+import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
     <footer className="bg-[#0b132a] text-gray-300 pt-16 pb-8 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 m:px-6 lg:px-8">
-        <div className="grid grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* logo */}
           <div className="space-y-4">
             <div className="shrink-0 flex items-center gap-2">
@@ -33,6 +34,13 @@ const Footer = () => {
                 aria-label="Facebook"
               >
                 <FaFacebook className="w-5 h-5" />
+              </a>
+              <a
+                href="#"
+                className="hover:text-indigo-400 transition"
+                aria-label="X (Twitter)"
+              >
+                <FaXTwitter className="w-5 h-5" />
               </a>
 
               <a

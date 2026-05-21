@@ -15,6 +15,7 @@ import Image from "next/image";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-hot-toast";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,18 +26,20 @@ const LoginPage = () => {
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
     // console.log(user);
+    const loadingToast = toast.loading("Logging in...");
     const { data, error } = await authClient.signIn.email({
       email: user.email,
       password: user.password,
     });
+    toast.dismiss(loadingToast);
     // console.log(data);
     if (error) {
-      alert(error.message || "Signup failed");
+      toast.error(error.message || "Invalid email or password!");
       return;
     }
 
     if (data) {
-      e.currentTarget;
+      toast.success("Welcome back! Login successful.");
       router.push("/");
     }
 
@@ -136,7 +139,7 @@ const LoginPage = () => {
         <p className="text-center text-sm text-gray-500 font-medium">
           New to StudyNook?
           <Link
-            href="/login"
+            href="/register"
             className="font-bold text-[#6366F1] hover:underline"
           >
             Create an account
