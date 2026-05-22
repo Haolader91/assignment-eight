@@ -47,20 +47,22 @@ const EditRoomForm = ({ initialRoom, roomId }) => {
     const loadingToast = toast.loading("Updating your premium room...");
 
     try {
-      const session = await authClient.getSession();
+      const tokenData = await authClient.token();
+      const token = tokenData?.data?.token;
 
-      const token =
-        session?.data?.token ||
-        session?.data?.accessToken ||
-        localStorage.getItem("token") ||
-        "";
+      if (!token) {
+        toast.dismiss(loadingToast);
+        toast.error("Session expired! Please login again.");
+        return;
+      }
 
-      console.log("Sending Token:", token); // 👈 ব্রাউজার কনসোলে চেক করার জন্য
+      console.log("Sending Valid Token:", token);
 
       const res = await fetch(`http://localhost:5000/rooms/${roomId}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
+
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updatedRoomData),
@@ -74,7 +76,6 @@ const EditRoomForm = ({ initialRoom, roomId }) => {
         router.refresh();
       } else {
         const errorData = await res.json();
-
         toast.error(errorData.message || "Failed to update room.");
       }
     } catch (error) {

@@ -10,54 +10,49 @@ import {
   TextField,
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
-// import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-hot-toast";
 
 const AddRoomsPage = () => {
   const router = useRouter();
 
-  const { data: session } = authClient.useSession();
-
   const onSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.currentTarget);
-    const rooms = Object.fromEntries(formData.entries());
+    const selectedAmenities = formData.getAll("amenities");
+    const baseRoomData = Object.fromEntries(formData.entries());
 
-    const roomName = formData.get("roomName");
-    const description = formData.get("description");
-    const imageUrl = formData.get("imageUrl");
-    const floor = formData.get("floor");
-    const capacity = Number(formData.get("capacity"));
-    const price = Number(formData.get("price"));
-
-    const amenities = formData.getAll("amenities");
-
-    const ownerEmail = session?.user?.email;
-
-    if (!ownerEmail) {
-      toast.error("Please login first to add a room!");
-      return;
-    }
-
-    const roomData = {
-      roomName,
-      description,
-      imageUrl,
-      floor,
-      capacity,
-      price,
-      amenities,
-      ownerEmail,
-      bookingCount: 0,
-    };
-    const loadingToast = toast.loading("Adding your premium room...");
+    const loadingToast = toast.loading("Adding your room to StudyNook...");
 
     try {
+      const tokenData = await authClient.token();
+      const token = tokenData?.data?.token;
+
+      console.log("Sending clean JWT to backend:", token);
+
+      if (!token) {
+        toast.dismiss(loadingToast);
+        toast.error("Authentication token not found! Please login again.");
+        return;
+      }
+
+      const roomData = {
+        roomName: baseRoomData.roomName,
+        description: baseRoomData.description,
+        imageUrl: baseRoomData.imageUrl,
+        floor: baseRoomData.floor,
+        capacity: Number(baseRoomData.capacity),
+        price: Number(baseRoomData.price),
+        amenities: selectedAmenities,
+        bookingCount: 0,
+      };
+
       const res = await fetch("http://localhost:5000/rooms", {
         method: "POST",
         headers: {
           "content-type": "application/json",
+
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(roomData),
@@ -65,18 +60,21 @@ const AddRoomsPage = () => {
 
       const data = await res.json();
       toast.dismiss(loadingToast);
+
       if (res.ok) {
-        toast.success("Room added successfully");
-        router.push("/rooms");
+        toast.success("Room added successfully!");
+        router.push("/my-listings");
+        router.refresh();
       } else {
         toast.error(data.message || "Failed to add room");
       }
     } catch (error) {
       toast.dismiss(loadingToast);
-      toast.error("Something went wrong with the server connection!");
-      console.error(error);
+      toast.error("Something went wrong! Please try again.");
+      console.error("Error adding room:", error);
     }
   };
+
   return (
     <div className="min-h-screen bg-[#fcfbfe] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl w-full bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-xl shadow-indigo-950/5 space-y-6">
@@ -124,7 +122,7 @@ const AddRoomsPage = () => {
               </TextField>
             </div>
 
-            {/* image url */}
+            {/* Image URL */}
             <div className="md:col-span-2">
               <TextField
                 name="imageUrl"
@@ -227,7 +225,7 @@ const AddRoomsPage = () => {
                   <input
                     type="checkbox"
                     name="amenities"
-                    value="Wi‑Fi"
+                    value="Wi-Fi"
                     className="w-4 h-4 rounded-md border-gray-300 accent-indigo-600"
                   />
                   <span>Wi-Fi</span>
@@ -266,7 +264,7 @@ const AddRoomsPage = () => {
             </div>
           </div>
 
-          {/* Button */}
+          {/* Submit Button */}
           <div className="pt-4">
             <Button
               type="submit"

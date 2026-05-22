@@ -1,3 +1,4 @@
+import EditRoomForm from "@/components/EditRoomForm";
 import React from "react";
 // import EditRoomForm from "@/components/EditRoomForm";
 
@@ -20,7 +21,7 @@ const EditRoomPage = async ({ params }) => {
           Update Room Info
         </h2>
 
-        {/* <EditRoomForm initialRoom={room} roomId={id} /> */}
+        <EditRoomForm initialRoom={room} roomId={id} />
       </div>
     </div>
   );

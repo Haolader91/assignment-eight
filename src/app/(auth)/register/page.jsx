@@ -199,13 +199,13 @@ const RegisterPage = () => {
           </button>
         </div>
 
-        <p className="text-center text-sm text-gray-500 font-medium">
+        <p className="text-center text-sm text-gray-500 font-medium gap-1 flex justify-center items-center">
           Already have an account?
           <Link
             href="/login"
             className="font-bold text-[#6366F1] hover:underline"
           >
-            Register
+            Login
           </Link>
         </p>
       </div>

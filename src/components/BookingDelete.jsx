@@ -28,8 +28,9 @@ const BookingDelete = ({ bookingId }) => {
   return (
     <AlertDialog isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <Button
+        variant="danger"
         onClick={() => setIsOpen(true)}
-        className="px-4 py-1.5 text-xs font-bold text-red-500 hover:text-white border border-red-200 hover:bg-red-500 rounded-xl transition duration-150 shadow-sm shadow-red-50"
+        className="px-4 py-1.5 text-xs font-bold hover:text-white border border-red-200 rounded-xl transition duration-150 shadow-sm shadow-red-50"
       >
         Cancel
       </Button>

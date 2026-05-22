@@ -40,19 +40,6 @@ const UserCard = () => {
           </div>
         </div>
       </div>
-
-      {/* Buttons */}
-      {/* <div className="p-4 bg-white border border-gray-50 rounded-2xl shadow-sm shadow-indigo-950/5 flex flex-col gap-3">
-        <button className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition">
-          <Edit3 className="w-4 h-4 text-indigo-500" />
-          Edit Room
-        </button>
-
-        <button className="w-full flex items-center justify-center gap-2 border border-red-100 bg-red-50/30 text-red-600 font-semibold text-sm py-3 rounded-xl hover:bg-red-50 transition">
-          <Trash2 className="w-4 h-4" />
-          Delete Room
-        </button>
-      </div> */}
     </div>
   );
 };

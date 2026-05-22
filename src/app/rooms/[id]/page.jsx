@@ -192,7 +192,7 @@ const RoomsDetailsPage = async ({ params }) => {
           {/* Owned*/}
           <div className="space-y-6">
             <UserCard />
-            <BookingButton room={room} />
+            <BookingButton room={room} token={mainToken} />
           </div>
         </div>
       </div>

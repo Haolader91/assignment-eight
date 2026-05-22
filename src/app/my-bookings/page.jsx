@@ -11,6 +11,14 @@ const MyBookingsPage = async () => {
   });
   const user = session?.user;
 
+  if (!user) {
+    return (
+      <div className="py-12 text-center font-bold">
+        Please login to view your bookings.
+      </div>
+    );
+  }
+
   const res = await fetch(`http://localhost:5000/booking/${user?.id}`, {
     cache: "no-store",
   });
@@ -69,26 +77,22 @@ const MyBookingsPage = async () => {
 
                         <td className="px-6 py-4">
                           <p className="font-semibold text-gray-700">
-                            {booking.date ||
-                              new Date(booking.updatedAt).toLocaleDateString(
-                                "en-US",
-                                {
-                                  day: "numeric",
-                                  month: "short",
-                                  year: "numeric",
-                                },
-                              )}
+                            {booking.date
+                              ? new Date(booking.date).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                  },
+                                )
+                              : "N/A"}
                           </p>
-                          <p className="text-xs text-gray-400 font-medium mt-0.5">
-                            {booking.time ||
-                              new Date(booking.updatedAt).toLocaleTimeString(
-                                "en-US",
-                                {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  hour12: true,
-                                },
-                              )}
+                          <p className="text-xs text-indigo-600 font-bold mt-0.5">
+                            {booking.startHour !== undefined &&
+                            booking.endHour !== undefined
+                              ? `${booking.startHour < 10 ? `0${booking.startHour}` : booking.startHour}:00 - ${booking.endHour < 10 ? `0${booking.endHour}` : booking.endHour}:00`
+                              : "N/A"}
                           </p>
                         </td>
 
@@ -105,7 +109,7 @@ const MyBookingsPage = async () => {
                         </td>
 
                         <td className="px-6 py-4 font-bold text-gray-800">
-                          ${booking.price}
+                          ${booking.totalCost || booking.price}
                         </td>
 
                         <td className="px-6 py-4 text-center">
