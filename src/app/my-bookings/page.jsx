@@ -1,16 +1,29 @@
-import { CalendarDays, XCircle } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import Image from "next/image";
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+
 import BookingDelete from "@/components/BookingDelete";
 
 const MyBookingsPage = async () => {
+  // get logged in user
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
+  // get jwt token
+  const tokenData = await auth.api.getToken({
+    headers: await headers(),
+  });
+
+  const token = tokenData?.token;
   const user = session?.user;
 
+  // console.log("USER:", user);
+  // console.log("TOKEN:", token);
+
+  // user not logged in
   if (!user) {
     return (
       <div className="py-12 text-center font-bold">
@@ -19,9 +32,14 @@ const MyBookingsPage = async () => {
     );
   }
 
-  const res = await fetch(`http://localhost:5000/booking/${user?.id}`, {
+  // fetch bookings
+  const res = await fetch(`http://localhost:5000/booking/${user.id}`, {
     cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
+
   const bookings = await res.json();
 
   return (
@@ -44,6 +62,7 @@ const MyBookingsPage = async () => {
                     <th className="px-6 py-4 text-center">Action</th>
                   </tr>
                 </thead>
+
                 <tbody className="divide-y divide-gray-50 text-sm">
                   {bookings.map((booking) => {
                     const currentStatus = booking.status || "Confirmed";
@@ -53,6 +72,7 @@ const MyBookingsPage = async () => {
                         key={booking._id}
                         className="hover:bg-gray-50/30 transition"
                       >
+                        {/* booking info */}
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-4">
                             <div className="w-12 h-12 relative rounded-xl overflow-hidden border border-gray-100 shrink-0">
@@ -64,10 +84,12 @@ const MyBookingsPage = async () => {
                                 className="object-cover"
                               />
                             </div>
+
                             <div>
                               <h3 className="font-bold text-gray-800">
                                 {booking.roomName}
                               </h3>
+
                               <p className="text-xs text-gray-400 font-medium">
                                 {booking.floor}
                               </p>
@@ -75,6 +97,7 @@ const MyBookingsPage = async () => {
                           </div>
                         </td>
 
+                        {/* date & time */}
                         <td className="px-6 py-4">
                           <p className="font-semibold text-gray-700">
                             {booking.date
@@ -88,14 +111,22 @@ const MyBookingsPage = async () => {
                                 )
                               : "N/A"}
                           </p>
+
+                          {/* =========== */}
+
                           <p className="text-xs text-indigo-600 font-bold mt-0.5">
-                            {booking.startHour !== undefined &&
-                            booking.endHour !== undefined
-                              ? `${booking.startHour < 10 ? `0${booking.startHour}` : booking.startHour}:00 - ${booking.endHour < 10 ? `0${booking.endHour}` : booking.endHour}:00`
-                              : "N/A"}
+                            {currentStatus === "Cancelled"
+                              ? "N/A"
+                              : booking.startHour !== undefined &&
+                                  booking.endHour !== undefined
+                                ? `${booking.startHour < 10 ? `0${booking.startHour}` : booking.startHour}:00 - ${booking.endHour < 10 ? `0${booking.endHour}` : booking.endHour}:00`
+                                : "N/A"}
                           </p>
+
+                          {/* ================= */}
                         </td>
 
+                        {/* status */}
                         <td className="px-6 py-4">
                           <span
                             className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${
@@ -108,13 +139,18 @@ const MyBookingsPage = async () => {
                           </span>
                         </td>
 
+                        {/* price */}
                         <td className="px-6 py-4 font-bold text-gray-800">
                           ${booking.totalCost || booking.price}
                         </td>
 
+                        {/* action */}
                         <td className="px-6 py-4 text-center">
                           {currentStatus !== "Cancelled" ? (
-                            <BookingDelete bookingId={booking._id} />
+                            <BookingDelete
+                              bookingId={booking._id}
+                              token={token || ""}
+                            />
                           ) : (
                             <span className="text-gray-400 font-bold">—</span>
                           )}
@@ -131,6 +167,7 @@ const MyBookingsPage = async () => {
             <div className="w-16 h-16 bg-indigo-50/50 rounded-2xl flex items-center justify-center text-indigo-500 mb-4 border border-indigo-50/80 shadow-inner">
               <CalendarDays className="w-8 h-8 stroke-[1.5]" />
             </div>
+
             <h3 className="text-lg font-bold text-gray-800 tracking-tight">
               You have no bookings yet.
             </h3>

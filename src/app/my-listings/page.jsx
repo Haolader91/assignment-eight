@@ -15,6 +15,8 @@ const MyListingsPage = () => {
         const tokenData = await authClient.token();
         const token = tokenData?.data?.token;
 
+        // console.log(token);
+
         if (!token) {
           toast.error("Please login to view your listings!");
           setLoading(false);
