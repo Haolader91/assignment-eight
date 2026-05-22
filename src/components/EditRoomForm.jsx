@@ -58,15 +58,18 @@ const EditRoomForm = ({ initialRoom, roomId }) => {
 
       console.log("Sending Valid Token:", token);
 
-      const res = await fetch(`http://localhost:5000/rooms/${roomId}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${roomId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
 
-          Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedRoomData),
         },
-        body: JSON.stringify(updatedRoomData),
-      });
+      );
 
       toast.dismiss(loadingToast);
 

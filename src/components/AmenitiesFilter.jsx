@@ -31,7 +31,6 @@ const AmenitiesFilter = () => {
         onChange={handleFilterChange}
         className="bg-transparent text-sm font-medium text-gray-700 outline-none cursor-pointer pr-2"
       >
-        {/* ⚠️ ভ্যালুগুলো অবশ্যই আপনার ডাটাবেজের অ্যারের ভেতরের বানানের সাথে মিলতে হবে */}
         <option value="">All Amenities</option>
         <option value="wifi">WiFi</option>
         <option value="powerOutlets">Power Outlets</option>

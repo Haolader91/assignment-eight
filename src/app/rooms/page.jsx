@@ -21,7 +21,7 @@ const AllRoomsPage = async ({ searchParams }) => {
   console.log(amenities);
 
   const res = await fetch(
-    `http://localhost:5000/rooms?search=${encodeURIComponent(search)}&amenities=${amenities}`,
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms?search=${encodeURIComponent(search)}&amenities=${amenities}`,
     { cache: "no-store" },
   );
 
@@ -30,7 +30,7 @@ const AllRoomsPage = async ({ searchParams }) => {
   return (
     <div className="bg-[#fcfbfe] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        <script
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `
               
@@ -43,7 +43,7 @@ const AllRoomsPage = async ({ searchParams }) => {
               }
             `,
           }}
-        />
+        /> */}
 
         <form
           method="GET"

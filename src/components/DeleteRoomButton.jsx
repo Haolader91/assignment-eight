@@ -13,12 +13,15 @@ const DeleteRoomButton = ({ roomId, token }) => {
     const loadingToast = toast.loading("Deleting room...");
 
     try {
-      const res = await fetch(`http://localhost:5000/rooms/${roomId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/rooms/${roomId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       toast.dismiss(loadingToast);
 

@@ -12,13 +12,16 @@ const BookingDelete = ({ bookingId, token }) => {
   const handleCancelBooking = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/booking/${bookingId}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/booking/${bookingId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (res.ok) {
         toast.success("Booking cancelled successfully!");

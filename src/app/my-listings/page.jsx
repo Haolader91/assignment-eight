@@ -23,12 +23,15 @@ const MyListingsPage = () => {
           return;
         }
 
-        const res = await fetch("http://localhost:5000/my-rooms", {
-          cache: "no-store",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/my-rooms`,
+          {
+            cache: "no-store",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         if (res.ok) {
           const data = await res.json();
